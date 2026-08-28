@@ -1,7 +1,19 @@
 import { Resend } from 'resend';
+import fs from 'fs';
+import path from 'path';
+
+if (!process.env.RESEND_API_KEY) {
+  const envPath = path.resolve(process.cwd(), '.env.local');
+  if (fs.existsSync(envPath)) {
+    try {
+      process.loadEnvFile(envPath);
+    } catch {
+      // Fallback
+    }
+  }
+}
 
 const resendApiKey = process.env.RESEND_API_KEY;
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export interface WelcomeEmailInput {
   name: string;
@@ -47,8 +59,11 @@ export async function sendWelcomeEmail({ name, email }: WelcomeEmailInput): Prom
     </html>
   `;
 
-  if (resend) {
+  const activeKey = process.env.RESEND_API_KEY || resendApiKey;
+
+  if (activeKey) {
     try {
+      const resend = new Resend(activeKey);
       const data = await resend.emails.send({
         from: 'TaskFlow <onboarding@resend.dev>',
         to: [email],
