@@ -10,8 +10,8 @@ import {
 } from '@/types/todo';
 import { User, LoginCredentials, RegisterCredentials, AuthResponse } from '@/types/auth';
 
-const STORAGE_KEY_TODOS = 'todolist_items_v2';
-const STORAGE_KEY_CATEGORIES = 'todolist_categories_v2';
+const STORAGE_KEY_TODOS = 'todolist_items_v3';
+const STORAGE_KEY_CATEGORIES = 'todolist_categories_v3';
 const STORAGE_KEY_USER = 'todolist_auth_user_v1';
 const STORAGE_KEY_TOKEN = 'todolist_auth_token_v1';
 
@@ -33,17 +33,17 @@ const DEFAULT_TODOS: (TodoItem & { userId: string })[] = [
   {
     id: 'todo-1',
     userId: DEMO_USER.id,
-    title: 'Audit & execute PostgreSQL DB schema migrations',
-    description: 'Ensure all tables (users, categories, todos, subtasks, tags) match schema.sql.',
+    title: 'Prepare Q3 product roadmap & feature proposal',
+    description: 'Define key project milestones, user deliverables, and architectural requirements for upcoming sprint.',
     completed: false,
     priority: 'urgent',
     categoryId: 'cat-work',
-    tags: ['database', 'architecture', 'postgresql'],
+    tags: ['roadmap', 'planning', 'strategy'],
     dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
     subtasks: [
-      { id: 'sub-1', title: 'Define FK constraints & ON DELETE CASCADE', completed: true },
-      { id: 'sub-2', title: 'Verify performance indexing', completed: true },
-      { id: 'sub-3', title: 'Test user data isolation', completed: false },
+      { id: 'sub-1', title: 'Outline core milestone goals', completed: true },
+      { id: 'sub-2', title: 'Review resource requirements with team', completed: true },
+      { id: 'sub-3', title: 'Finalize executive presentation deck', completed: false },
     ],
     createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
     updatedAt: new Date().toISOString(),
@@ -51,16 +51,16 @@ const DEFAULT_TODOS: (TodoItem & { userId: string })[] = [
   {
     id: 'todo-2',
     userId: DEMO_USER.id,
-    title: 'Test 1-Click Recruiter Demo Login flow',
-    description: 'Verify instant demo authentication and smooth recruiter evaluation.',
+    title: 'Design responsive mobile UI wireframes & tokens',
+    description: 'Draft high-fidelity design tokens, dark mode variants, and smooth transition animations.',
     completed: true,
     priority: 'high',
     categoryId: 'cat-work',
-    tags: ['auth', 'ux', 'portfolio'],
+    tags: ['design', 'ui', 'mobile'],
     dueDate: new Date(Date.now() - 86400000 * 1).toISOString(),
     subtasks: [
-      { id: 'sub-4', title: 'Header avatar dropdown menu', completed: true },
-      { id: 'sub-5', title: 'JWT token simulation in LocalStorage', completed: true },
+      { id: 'sub-4', title: 'Header & sidebar navigation wireframes', completed: true },
+      { id: 'sub-5', title: 'Define semantic color variables & typography', completed: true },
     ],
     createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
     updatedAt: new Date().toISOString(),
@@ -68,18 +68,49 @@ const DEFAULT_TODOS: (TodoItem & { userId: string })[] = [
   {
     id: 'todo-3',
     userId: DEMO_USER.id,
-    title: 'Weekly grocery restock & meal prep',
-    description: 'Buy fresh vegetables, avocados, organic milk, and protein bars.',
+    title: 'Weekly grocery restock & healthy meal prep',
+    description: 'Buy fresh vegetables, avocados, organic milk, and prepare lunch meals for the week.',
     completed: false,
     priority: 'medium',
     categoryId: 'cat-shopping',
     tags: ['groceries', 'home'],
     dueDate: new Date().toISOString(),
     subtasks: [
-      { id: 'sub-7', title: 'Avocados & tomatoes', completed: true },
-      { id: 'sub-8', title: 'Almond milk & eggs', completed: false },
+      { id: 'sub-7', title: 'Avocados, spinach & tomatoes', completed: true },
+      { id: 'sub-8', title: 'Almond milk & organic eggs', completed: false },
     ],
     createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'todo-4',
+    userId: DEMO_USER.id,
+    title: '30-minute evening cardio & stretching session',
+    description: 'Run on treadmill or go for a brisk walk in the park followed by core stretching.',
+    completed: false,
+    priority: 'medium',
+    categoryId: 'cat-health',
+    tags: ['fitness', 'routine'],
+    dueDate: new Date(Date.now() + 86400000 * 1).toISOString(),
+    subtasks: [
+      { id: 'sub-9', title: 'Warm-up 5 mins', completed: false },
+      { id: 'sub-10', title: '20 min run', completed: false },
+    ],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'todo-5',
+    userId: DEMO_USER.id,
+    title: 'Review quarterly financial investments and budget',
+    description: 'Analyze budget allocations, track monthly expenses, and rebalance portfolio.',
+    completed: false,
+    priority: 'low',
+    categoryId: 'cat-personal',
+    tags: ['finance', 'planning'],
+    dueDate: new Date(Date.now() + 86400000 * 7).toISOString(),
+    subtasks: [],
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
     updatedAt: new Date().toISOString(),
   },
 ];
@@ -89,26 +120,21 @@ class MockApiClient {
     return typeof window !== 'undefined';
   }
 
-  // --- Auth Session Methods ---
-
   getCurrentUser(): User | null {
     if (!this.isBrowser()) return DEMO_USER;
     const userStr = localStorage.getItem(STORAGE_KEY_USER);
     if (!userStr) {
-      // Default to DEMO_USER out-of-the-box for portfolio
-      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(DEMO_USER));
-      localStorage.setItem(STORAGE_KEY_TOKEN, 'jwt_mock_token_demo_123');
-      return DEMO_USER;
+      return null;
     }
     try {
       return JSON.parse(userStr);
     } catch {
-      return DEMO_USER;
+      return null;
     }
   }
 
   getCurrentToken(): string | null {
-    if (!this.isBrowser()) return 'jwt_mock_token_demo_123';
+    if (!this.isBrowser()) return null;
     return localStorage.getItem(STORAGE_KEY_TOKEN);
   }
 
@@ -118,7 +144,7 @@ class MockApiClient {
       id: `usr-${Date.now()}`,
       email: credentials.email,
       name: credentials.email.split('@')[0] || 'User',
-      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${credentials.email}`,
+      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(credentials.email)}`,
     };
     const token = `jwt_mock_token_${Date.now()}`;
     if (this.isBrowser()) {
@@ -134,7 +160,7 @@ class MockApiClient {
       id: `usr-${Date.now()}`,
       email: credentials.email,
       name: credentials.name,
-      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${credentials.email}`,
+      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(credentials.email)}`,
     };
     const token = `jwt_mock_token_${Date.now()}`;
     if (this.isBrowser()) {
@@ -161,8 +187,6 @@ class MockApiClient {
       localStorage.removeItem(STORAGE_KEY_TOKEN);
     }
   }
-
-  // --- Data Scoping Helpers ---
 
   private getStoredTodos(): (TodoItem & { userId: string })[] {
     if (!this.isBrowser()) return DEFAULT_TODOS;
@@ -207,8 +231,6 @@ class MockApiClient {
   private delay(ms = 150): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
-  // --- Scoped API Endpoints ---
 
   async getTodos(filters?: Partial<FilterOptions>): Promise<{ data: TodoItem[]; total: number }> {
     await this.delay();

@@ -63,13 +63,11 @@ export async function GET(req: Request) {
     } else if (sortBy === 'title') {
       sql += ` ORDER BY t.title ${sortOrder}`;
     } else {
-      // default dueDate
       sql += ` ORDER BY t.due_date IS NULL, t.due_date ${sortOrder}`;
     }
 
     const todos = await query(sql, params);
 
-    // Attach subtasks & tags for each todo
     const todoIds = todos.map((t) => t.id);
     let subtasksMap: Record<string, any[]> = {};
 
@@ -106,15 +104,19 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, description, priority, categoryId, dueDate, subtasks } = body;
 
-    if (!title || !title.trim()) {
+    const cleanTitle = (title || '').trim();
+    if (!cleanTitle) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
+
+    const validPriorities = ['low', 'medium', 'high', 'urgent'];
+    const safePriority = validPriorities.includes(priority) ? priority : 'medium';
 
     const res = await query(
       `INSERT INTO todos (user_id, category_id, title, description, priority, due_date)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, user_id as "userId", category_id as "categoryId", title, description, completed, priority, due_date as "dueDate", created_at as "createdAt", updated_at as "updatedAt"`,
-      [authUser.userId, categoryId || null, title.trim(), description || '', priority || 'medium', dueDate || null]
+      [authUser.userId, categoryId || null, cleanTitle, (description || '').trim(), safePriority, dueDate || null]
     );
 
     const todo = res[0];
@@ -123,11 +125,13 @@ export async function POST(req: Request) {
     if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
       for (let i = 0; i < subtasks.length; i++) {
         const st = subtasks[i];
-        const stRes = await query(
-          `INSERT INTO subtasks (todo_id, title, completed, position) VALUES ($1, $2, $3, $4) RETURNING id, title, completed`,
-          [todo.id, st.title, st.completed || false, i]
-        );
-        createdSubtasks.push(stRes[0]);
+        if (st.title && st.title.trim()) {
+          const stRes = await query(
+            `INSERT INTO subtasks (todo_id, title, completed, position) VALUES ($1, $2, $3, $4) RETURNING id, title, completed`,
+            [todo.id, st.title.trim(), st.completed || false, i]
+          );
+          createdSubtasks.push(stRes[0]);
+        }
       }
     }
 

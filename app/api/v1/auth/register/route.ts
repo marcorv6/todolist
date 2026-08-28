@@ -3,14 +3,26 @@ import { query } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { signToken } from '@/lib/auth/jwt';
 import { sendWelcomeEmail } from '@/lib/email';
+import { isValidEmail, sanitizeString } from '@/lib/security/sanitize';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password } = body;
+    let { name, email, password } = body;
+
+    name = sanitizeString(name);
+    email = sanitizeString(email).toLowerCase();
 
     if (!email || !name) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
+    }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json({ error: 'Invalid email address format' }, { status: 400 });
+    }
+
+    if (!password || password.length < 6) {
+      return NextResponse.json({ error: 'Password must be at least 6 characters long' }, { status: 400 });
     }
 
     const existing = await query(`SELECT id FROM users WHERE email = $1`, [email]);
@@ -18,7 +30,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
     }
 
-    const passwordHash = await bcrypt.hash(password || 'defaultPass123', 10);
+    const passwordHash = await bcrypt.hash(password, 10);
     const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email)}`;
 
     const res = await query(
