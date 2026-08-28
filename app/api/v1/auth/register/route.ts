@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { signToken } from '@/lib/auth/jwt';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -41,6 +42,11 @@ export async function POST(req: Request) {
         [user.id, cat.name, cat.color, cat.icon]
       );
     }
+
+    // Trigger Welcome Email async
+    sendWelcomeEmail({ name: user.name, email: user.email }).catch((e) =>
+      console.error('Welcome email dispatch error:', e)
+    );
 
     return NextResponse.json({ token, user }, { status: 201 });
   } catch (err: any) {
