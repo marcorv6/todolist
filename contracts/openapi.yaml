@@ -1,0 +1,430 @@
+openapi: 3.0.3
+info:
+  title: ToDo List REST API Contract
+  description: OpenAPI 3.0 specification for the ToDo List application backend communication, Auth & EP auditing.
+  version: 1.1.0
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local Development Backend
+  - url: https://api.todolist.example.com/api/v1
+    description: Production Server
+
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user & issue JWT token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/register:
+    post:
+      summary: Register a new user account
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInput'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/me:
+    get:
+      summary: Get currently authenticated user profile
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      summary: Log out user session
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully logged out
+
+  /todos:
+    get:
+      summary: List all todo items for authenticated user
+      operationId: getTodos
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [all, active, completed, overdue, today]
+            default: all
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [all, low, medium, high, urgent]
+            default: all
+        - name: categoryId
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [dueDate, priority, createdAt, title]
+            default: dueDate
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        '200':
+          description: A list of todo items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TodoItem'
+                  total:
+                    type: integer
+    post:
+      summary: Create a new todo item
+      operationId: createTodo
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoInput'
+      responses:
+        '201':
+          description: Todo item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+
+  /todos/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get specific todo by ID
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Todo item details
+    put:
+      summary: Update full todo item
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Updated todo item
+    patch:
+      summary: Partially update todo item
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Updated todo item
+    delete:
+      summary: Delete todo item
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Deleted successfully
+
+  /todos/batch:
+    post:
+      summary: Perform batch operations on todos
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Batch action executed
+
+  /categories:
+    get:
+      summary: List user categories
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Categories list
+    post:
+      summary: Create a category
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Category created
+
+  /categories/{id}:
+    delete:
+      summary: Delete a category
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Category deleted
+
+  /stats:
+    get:
+      summary: Get task statistics for current user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Overall todo statistics
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+      properties:
+        id:
+          type: string
+          example: "usr-demo-1"
+        email:
+          type: string
+          example: "recruiter@demo.com"
+        name:
+          type: string
+          example: "Alex Dev (Recruiter Demo)"
+        avatarUrl:
+          type: string
+          nullable: true
+          example: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex"
+
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    RegisterInput:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - user
+      properties:
+        token:
+          type: string
+          example: "jwt_mock_token_12345"
+        user:
+          $ref: '#/components/schemas/User'
+
+    Priority:
+      type: string
+      enum: [low, medium, high, urgent]
+      default: medium
+
+    SubTask:
+      type: object
+      required:
+        - id
+        - title
+        - completed
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        completed:
+          type: boolean
+
+    Category:
+      type: object
+      required:
+        - id
+        - name
+        - color
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+        icon:
+          type: string
+        taskCount:
+          type: integer
+
+    TodoItem:
+      type: object
+      required:
+        - id
+        - title
+        - completed
+        - priority
+        - subtasks
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        completed:
+          type: boolean
+        priority:
+          $ref: '#/components/schemas/Priority'
+        categoryId:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        subtasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTask'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateTodoInput:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          $ref: '#/components/schemas/Priority'
+        categoryId:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        subtasks:
+          type: array
+          items:
+            type: object
+            required:
+              - title
+            properties:
+              title:
+                type: string
+              completed:
+                type: boolean
+
+  responses:
+    Unauthorized:
+      description: Unauthorized (Invalid or missing JWT bearer token)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized"
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid input"
