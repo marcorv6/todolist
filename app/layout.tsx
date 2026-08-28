@@ -5,8 +5,13 @@ import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'TaskFlow - Minimalist ToDo List',
-  description: 'A modern, minimalist ToDo List web app built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and PostgreSQL schema.',
+  title: 'TaskFlow - Minimalist Task & Productivity Platform',
+  description: 'A modern full-stack task management platform built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and PostgreSQL.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
