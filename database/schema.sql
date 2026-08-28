@@ -105,6 +105,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_users_timestamp ON users;
+DROP TRIGGER IF EXISTS update_categories_timestamp ON categories;
+DROP TRIGGER IF EXISTS update_todos_timestamp ON todos;
+DROP TRIGGER IF EXISTS update_subtasks_timestamp ON subtasks;
+
 CREATE TRIGGER update_users_timestamp BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 CREATE TRIGGER update_categories_timestamp BEFORE UPDATE ON categories FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 CREATE TRIGGER update_todos_timestamp BEFORE UPDATE ON todos FOR EACH ROW EXECUTE FUNCTION update_timestamp();
