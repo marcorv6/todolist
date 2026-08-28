@@ -7,40 +7,40 @@ export interface AvatarOption {
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
   {
-    id: 'princess-black-hair',
-    name: 'Black-Haired Princess',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasmine&hairColor=2c1b18&top=longHair&skinColor=f8d25c',
-    badge: '👑 Princess',
+    id: 'data-analyst',
+    name: 'Data Analyst',
+    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
+    badge: '📊 Analyst',
   },
   {
     id: 'alex-dev',
     name: 'Alex Dev',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+    url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=256',
     badge: '⚡ Recruiter',
   },
   {
     id: 'felix-engineer',
     name: 'Software Engineer',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256',
   },
   {
     id: 'aneka-designer',
     name: 'UI/UX Designer',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+    url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256',
   },
   {
     id: 'brian-techlead',
     name: 'Tech Lead',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Brian',
+    url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=256',
   },
   {
     id: 'destiny-explorer',
     name: 'Cosmic Explorer',
-    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Destiny',
+    url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=256',
   },
   {
     id: 'bot-cyberfox',
     name: 'Cyber Fox Bot',
-    url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Fox',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=256',
   },
 ];
