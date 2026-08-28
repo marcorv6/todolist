@@ -7,40 +7,35 @@ export interface AvatarOption {
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
   {
-    id: 'data-analyst',
+    id: 'data-analyst-princess',
     name: 'Data Analyst',
-    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
-    badge: '📊 Analyst',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=JasmineAnalyst&hair=long01&hairColor=000000&skinColor=f8d25c',
+    badge: '👑 Black-Haired Princess',
   },
   {
     id: 'alex-dev',
     name: 'Alex Dev',
-    url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=256',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=AlexDev',
     badge: '⚡ Recruiter',
   },
   {
-    id: 'felix-engineer',
-    name: 'Software Engineer',
-    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256',
+    id: 'fullstack-engineer',
+    name: 'Full-Stack Developer',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=FelixCoder',
   },
   {
-    id: 'aneka-designer',
+    id: 'ui-ux-designer',
     name: 'UI/UX Designer',
-    url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=AnekaArtist',
   },
   {
-    id: 'brian-techlead',
-    name: 'Tech Lead',
-    url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=256',
+    id: 'tech-lead',
+    name: 'Systems Architect',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=BrianArchitect',
   },
   {
-    id: 'destiny-explorer',
-    name: 'Cosmic Explorer',
-    url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=256',
-  },
-  {
-    id: 'bot-cyberfox',
-    name: 'Cyber Fox Bot',
-    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=256',
+    id: 'ai-engineer',
+    name: 'AI Systems Engineer',
+    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=MayaAI',
   },
 ];
