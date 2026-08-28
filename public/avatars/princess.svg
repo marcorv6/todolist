@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="50" fill="url(#bg-gradient)"/>
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f472b6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="crown-gold" x1="0" y1="0" x2="0" y2="100%" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fef08a"/>
+      <stop offset="1" stop-color="#eab308"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Royal Sparkles -->
+  <path d="M20 22L22 25L25 27L22 29L20 32L18 29L15 27L18 25Z" fill="#ffffff" opacity="0.8"/>
+  <path d="M80 20L81.5 22.5L84 24L81.5 25.5L80 28L78.5 25.5L76 24L78.5 22.5Z" fill="#ffffff" opacity="0.8"/>
+
+  <!-- Back Long Black Hair -->
+  <path d="M22 45C22 30 35 22 50 22C65 22 78 30 78 45C78 68 74 88 70 95H30C26 88 22 68 22 45Z" fill="#09090b"/>
+
+  <!-- Neck & Shoulders -->
+  <path d="M42 70H58V80C58 84 54 88 50 88C46 88 42 84 42 80V70Z" fill="#fbcfe8"/>
+  <path d="M28 88C35 84 42 82 50 82C58 82 65 84 72 88L78 100H22L28 88Z" fill="#ec4899"/>
+  <!-- Royal Pearl Necklace -->
+  <circle cx="42" cy="81" r="2.5" fill="#ffffff"/>
+  <circle cx="46" cy="83" r="2.5" fill="#ffffff"/>
+  <circle cx="50" cy="84" r="3" fill="#ffffff"/>
+  <circle cx="54" cy="83" r="2.5" fill="#ffffff"/>
+  <circle cx="58" cy="81" r="2.5" fill="#ffffff"/>
+
+  <!-- Princess Face -->
+  <path d="M33 46C33 36 40 33 50 33C60 33 67 36 67 46C67 60 60 68 50 68C40 68 33 60 33 46Z" fill="#fde68a"/>
+
+  <!-- Front Hair & Bangs -->
+  <path d="M32 42C36 34 44 33 50 37C56 33 64 34 68 42C69 48 66 52 66 52C66 52 64 42 59 41C54 40 50 44 50 44C50 44 46 40 41 41C36 42 34 52 34 52C34 52 31 48 32 42Z" fill="#09090b"/>
+
+  <!-- Eyes -->
+  <ellipse cx="43" cy="50" rx="3.5" ry="4.5" fill="#09090b"/>
+  <ellipse cx="57" cy="50" rx="3.5" ry="4.5" fill="#09090b"/>
+  <!-- Eye Sparkles -->
+  <circle cx="44.5" cy="48.5" r="1.5" fill="#ffffff"/>
+  <circle cx="58.5" cy="48.5" r="1.5" fill="#ffffff"/>
+  <!-- Eyelashes -->
+  <path d="M38 47C40 45 44 45 46 47" stroke="#09090b" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M54 47C56 45 60 45 62 47" stroke="#09090b" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Cheeks & Smile -->
+  <circle cx="40" cy="55" r="3" fill="#f472b6" opacity="0.5"/>
+  <circle cx="60" cy="55" r="3" fill="#f472b6" opacity="0.5"/>
+  <path d="M46 58C48 60 52 60 54 58" stroke="#be185d" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Gold Princess Crown / Tiara -->
+  <path d="M34 32L38 20L44 26L50 14L56 26L62 20L66 32Z" fill="url(#crown-gold)" stroke="#ca8a04" stroke-width="1"/>
+  <!-- Crown Jewels -->
+  <circle cx="50" cy="20" r="2" fill="#ef4444"/>
+  <circle cx="38" cy="24" r="1.5" fill="#3b82f6"/>
+  <circle cx="62" cy="24" r="1.5" fill="#3b82f6"/>
+  <!-- Crown Base Band -->
+  <rect x="33" y="31" width="34" height="3" rx="1.5" fill="#fef08a" stroke="#ca8a04" stroke-width="0.8"/>
+</svg>

@@ -9,7 +9,7 @@ export const AVATAR_OPTIONS: AvatarOption[] = [
   {
     id: 'data-analyst-princess',
     name: 'Data Analyst',
-    url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=JasmineAnalyst&hair=long01&hairColor=000000&skinColor=f8d25c',
+    url: '/avatars/princess.svg',
     badge: '👑 Black-Haired Princess',
   },
   {
