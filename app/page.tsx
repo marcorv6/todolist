@@ -48,6 +48,13 @@ export default function Home() {
   const [editingTodo, setEditingTodo] = useState<TodoItem | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  // Prompt Auth Modal on startup if user is unauthenticated
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      setIsAuthModalOpen(true);
+    }
+  }, [isAuthLoading, isAuthenticated]);
+
   // Load Data safely only when user is authenticated
   const loadData = useCallback(async () => {
     if (!isAuthenticated || !token) {
@@ -71,7 +78,6 @@ export default function Home() {
       setCategories(categoriesRes);
       setStats(statsRes);
     } catch (err: any) {
-      // Ignore 401 unauthenticated errors silently
       if (err?.response?.status !== 401) {
         console.error('Data load error', err);
       }
@@ -80,6 +86,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthLoading && isAuthenticated) {
+      setIsAuthModalOpen(false);
       loadData();
     }
   }, [loadData, isAuthLoading, isAuthenticated]);
