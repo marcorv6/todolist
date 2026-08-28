@@ -14,6 +14,7 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password?: string;
+  avatarUrl?: string;
 }
 
 export interface AuthResponse {
@@ -30,4 +31,5 @@ export interface AuthContextType {
   register: (credentials: RegisterCredentials) => Promise<User>;
   loginAsDemoGuest: () => Promise<User>;
   logout: () => void;
+  updateAvatar: (avatarUrl: string) => void;
 }

@@ -92,6 +92,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateAvatar = (newAvatarUrl: string) => {
+    if (user) {
+      const updatedUser = { ...user, avatarUrl: newAvatarUrl };
+      setUser(updatedUser);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('todolist_auth_user_v1', JSON.stringify(updatedUser));
+      }
+      toast.success('Avatar updated! ✨');
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -103,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         loginAsDemoGuest,
         logout,
+        updateAvatar,
       }}
     >
       {children}
