@@ -1,0 +1,36 @@
+{
+  "$schema_comment": "Hooks that automate verification. The harness runs them automatically upon file edits or session stopping.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm test -- --watchAll=false 2>&1 | tail -5",
+            "description": "After editing files, run the test suite to report feedback."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.agent/init.sh > /tmp/harness_init.log 2>&1 && echo '[harness] init.sh OK' || (echo '[harness] init.sh FAILED — check /tmp/harness_init.log before closing' && cat /tmp/harness_init.log | tail -20)",
+            "description": "Force environment verification checks before terminating the session."
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(./.agent/init.sh)",
+      "Bash(npm test*)",
+      "Bash(npm run lint*)",
+      "Bash(npx tsc*)"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "project": "TodoList",
+  "version": "1.0.0",
+  "harness_roles": ["orchestrator", "builder", "tester", "committer"],
+  "features": [
+    {
+      "id": "FEAT-001",
+      "title": "4-Agent Harness Integration",
+      "status": "completed",
+      "assigned_role": "orchestrator",
+      "verified": true
+    }
+  ]
+}

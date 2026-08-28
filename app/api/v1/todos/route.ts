@@ -69,7 +69,7 @@ export async function GET(req: Request) {
     const todos = await query(sql, params);
 
     const todoIds = todos.map((t) => t.id);
-    let subtasksMap: Record<string, any[]> = {};
+    const subtasksMap: Record<string, any[]> = {};
 
     if (todoIds.length > 0) {
       const subtasks = await query(
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
     );
 
     const todo = res[0];
-    let createdSubtasks: any[] = [];
+    const createdSubtasks: any[] = [];
 
     if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
       for (let i = 0; i < subtasks.length; i++) {

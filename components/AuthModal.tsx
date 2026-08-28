@@ -140,7 +140,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         <div className="text-center pt-2 text-xs">
           {tab === 'login' ? (
             <p className="text-muted-foreground">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button
                 type="button"
                 onClick={() => setTab('register')}

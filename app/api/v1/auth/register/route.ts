@@ -8,7 +8,8 @@ import { isValidEmail, sanitizeString } from '@/lib/security/sanitize';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    let { name, email, password } = body;
+    const { password } = body;
+    let { name, email } = body;
 
     name = sanitizeString(name);
     email = sanitizeString(email).toLowerCase();
