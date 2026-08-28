@@ -1,41 +1,31 @@
 export interface AvatarOption {
   id: string;
-  name: string;
   url: string;
-  badge?: string;
 }
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
   {
-    id: 'data-analyst-princess',
-    name: 'Data Analyst',
+    id: 'avatar-1',
     url: '/avatars/princess.svg',
-    badge: '👑 Lead Analyst',
   },
   {
-    id: 'alex-dev',
-    name: 'Alex Dev',
+    id: 'avatar-2',
     url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=AlexDev',
-    badge: '⚡ Recruiter',
   },
   {
-    id: 'fullstack-engineer',
-    name: 'Full-Stack Developer',
+    id: 'avatar-3',
     url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=FelixCoder',
   },
   {
-    id: 'ui-ux-designer',
-    name: 'UI/UX Designer',
+    id: 'avatar-4',
     url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=AnekaArtist',
   },
   {
-    id: 'tech-lead',
-    name: 'Systems Architect',
+    id: 'avatar-5',
     url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=BrianArchitect',
   },
   {
-    id: 'ai-engineer',
-    name: 'AI Systems Engineer',
+    id: 'avatar-6',
     url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=MayaAI',
   },
 ];
