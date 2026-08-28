@@ -13,21 +13,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const currentUser = api.getCurrentUser();
-      const currentToken = api.getCurrentToken();
-      if (currentUser && currentToken) {
-        setUser(currentUser);
-        setToken(currentToken);
-      } else {
-        setUser(null);
-        setToken(null);
+    async function initAuth() {
+      try {
+        const currentUser = api.getCurrentUser();
+        const currentToken = api.getCurrentToken();
+        if (currentUser && currentToken) {
+          setUser(currentUser);
+          setToken(currentToken);
+        } else {
+          // Default to Recruiter Demo session so user is ALWAYS logged in
+          const res = await api.loginAsDemoGuest();
+          setUser(res.user);
+          setToken(res.token);
+        }
+      } catch (err) {
+        console.error('Failed to initialize auth session', err);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error('Failed to restore auth session', err);
-    } finally {
-      setIsLoading(false);
     }
+    initAuth();
   }, []);
 
   const login = async (credentials: LoginCredentials): Promise<User> => {
@@ -82,9 +87,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       await api.logout();
-      setUser(null);
-      setToken(null);
-      toast.info('Signed out');
+      // Instantly switch back to Recruiter Demo session so user is ALWAYS logged in
+      const res = await api.loginAsDemoGuest();
+      setUser(res.user);
+      setToken(res.token);
+      toast.info('Switched back to Recruiter Demo session');
     } catch (err) {
       console.error('Logout error', err);
     } finally {
