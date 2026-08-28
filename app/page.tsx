@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 import { mockApiClient } from '@/lib/api/mock-client';
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, isAuthenticated, token, isLoading: isAuthLoading } = useAuth();
 
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -48,8 +48,11 @@ export default function Home() {
   const [editingTodo, setEditingTodo] = useState<TodoItem | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Load Data
+  // Load Data safely only when user is authenticated
   const loadData = useCallback(async () => {
+    if (!isAuthenticated || !token) {
+      return;
+    }
     try {
       const [todosRes, categoriesRes, statsRes] = await Promise.all([
         api.getTodos({
@@ -67,14 +70,19 @@ export default function Home() {
       setTodos(todosRes.data);
       setCategories(categoriesRes);
       setStats(statsRes);
-    } catch {
-      toast.error('Failed to load data');
+    } catch (err: any) {
+      // Ignore 401 unauthenticated errors silently
+      if (err?.response?.status !== 401) {
+        console.error('Data load error', err);
+      }
     }
-  }, [activeStatus, priorityFilter, activeCategoryId, searchQuery, sortBy, sortOrder, user]);
+  }, [activeStatus, priorityFilter, activeCategoryId, searchQuery, sortBy, sortOrder, user, isAuthenticated, token]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData, user]);
+    if (!isAuthLoading && isAuthenticated) {
+      loadData();
+    }
+  }, [loadData, isAuthLoading, isAuthenticated]);
 
   // Task Handlers
   const handleToggleComplete = async (id: string, currentStatus: boolean) => {

@@ -13,18 +13,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const currentUser = api.getCurrentUser();
-      const currentToken = api.getCurrentToken();
-      if (currentUser && currentToken) {
-        setUser(currentUser);
-        setToken(currentToken);
+    async function initAuth() {
+      try {
+        const currentUser = api.getCurrentUser();
+        const currentToken = api.getCurrentToken();
+        if (currentUser && currentToken) {
+          setUser(currentUser);
+          setToken(currentToken);
+        } else {
+          // Auto-initialize demo guest for zero-friction recruiter portfolio viewing
+          const res = await api.loginAsDemoGuest();
+          setUser(res.user);
+          setToken(res.token);
+        }
+      } catch (err) {
+        console.error('Failed to initialize auth session', err);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error('Failed to restore auth session', err);
-    } finally {
-      setIsLoading(false);
     }
+    initAuth();
   }, []);
 
   const login = async (credentials: LoginCredentials): Promise<User> => {
@@ -36,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success(`Welcome back, ${res.user.name}!`);
       return res.user;
     } catch (err: any) {
-      toast.error(err.message || 'Login failed');
+      toast.error(err.response?.data?.error || err.message || 'Login failed');
       throw err;
     } finally {
       setIsLoading(false);
@@ -52,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success(`Account created! Welcome, ${res.user.name}`);
       return res.user;
     } catch (err: any) {
-      toast.error(err.message || 'Registration failed');
+      toast.error(err.response?.data?.error || err.message || 'Registration failed');
       throw err;
     } finally {
       setIsLoading(false);
@@ -65,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const res = await api.loginAsDemoGuest();
       setUser(res.user);
       setToken(res.token);
-      toast.success('Signed in as Recruiter Demo Guest! ⚡');
+      toast.success('Signed in as Recruiter Demo Guest ⚡');
       return res.user;
     } catch (err: any) {
       toast.error('Demo login failed');
