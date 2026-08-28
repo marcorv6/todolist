@@ -1,16 +1,14 @@
-import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 
-const EMAIL_USER = process.env.EMAIL_USER;
-const EMAIL_PASS = process.env.EMAIL_PASS;
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export interface WelcomeEmailInput {
   name: string;
   email: string;
 }
 
-export async function sendWelcomeEmail({ name, email }: WelcomeEmailInput): Promise<{ success: boolean; messageId?: string }> {
+export async function sendWelcomeEmail({ name, email }: WelcomeEmailInput): Promise<{ success: boolean; id?: string }> {
   const subject = 'Welcome to TaskFlow! 🚀';
   const htmlContent = `
     <!DOCTYPE html>
@@ -49,49 +47,28 @@ export async function sendWelcomeEmail({ name, email }: WelcomeEmailInput): Prom
     </html>
   `;
 
-  // 1. Nodemailer SMTP (Gmail pattern from portfolio-backend)
-  if (EMAIL_USER && EMAIL_PASS) {
+  if (resend) {
     try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: EMAIL_USER,
-          pass: EMAIL_PASS,
-        },
-      });
-
-      const info = await transporter.sendMail({
-        from: `TaskFlow <${EMAIL_USER}>`,
-        to: email,
-        subject,
-        html: htmlContent,
-      });
-
-      console.log(`✉️ [Nodemailer SMTP] Welcome email sent to ${email} (MessageId: ${info.messageId})`);
-      return { success: true, messageId: info.messageId };
-    } catch (err) {
-      console.error('Nodemailer SMTP dispatch error:', err);
-    }
-  }
-
-  // 2. Resend API Fallback
-  if (RESEND_API_KEY) {
-    try {
-      const resend = new Resend(RESEND_API_KEY);
       const data = await resend.emails.send({
         from: 'TaskFlow <onboarding@resend.dev>',
         to: [email],
         subject,
         html: htmlContent,
       });
+
+      if (data.error) {
+        console.error('Resend API error:', data.error);
+        return { success: false };
+      }
+
       console.log(`✉️ [Resend API] Welcome email sent to ${email} (ID: ${data.data?.id})`);
-      return { success: true, messageId: data.data?.id };
+      return { success: true, id: data.data?.id };
     } catch (err) {
       console.error('Resend API dispatch error:', err);
     }
   }
 
-  // 3. Fallback Dev Log
+  // Fallback Dev Log when RESEND_API_KEY is missing
   console.log(`✉️ [DEV EMAIL SERVICE] Simulated Welcome Email dispatched to ${name} <${email}>`);
-  return { success: true, messageId: 'simulated_dev_id' };
+  return { success: true, id: 'simulated_dev_id' };
 }
