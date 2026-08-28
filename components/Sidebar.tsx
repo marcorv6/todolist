@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Category, TaskStatusFilter } from '@/types/todo';
+import { useAuth } from '@/context/AuthContext';
 import {
   ListTodo,
   Calendar,
@@ -42,6 +43,9 @@ export function Sidebar({
   onResetData,
   counts,
 }: SidebarProps) {
+  const { user } = useAuth();
+  const isDemoUser = user?.email === 'recruiter@demo.com' || user?.id === 'usr-demo-1';
+
   const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [newCatName, setNewCatName] = useState('');
   const [newCatColor, setNewCatColor] = useState('#3b82f6');
@@ -193,18 +197,21 @@ export function Sidebar({
         )}
       </div>
 
-      <div className="my-5 border-t border-border/40" />
-
-      {/* Reset Data Button */}
-      <div className="px-1">
-        <button
-          onClick={onResetData}
-          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
-        >
-          <RotateCcw className="h-3 w-3" />
-          <span>Reset Sample Data</span>
-        </button>
-      </div>
+      {/* Render Reset Sample Data ONLY for 1-Click Recruiter Demo User */}
+      {isDemoUser && (
+        <>
+          <div className="my-5 border-t border-border/40" />
+          <div className="px-1">
+            <button
+              onClick={onResetData}
+              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>Reset Sample Data</span>
+            </button>
+          </div>
+        </>
+      )}
     </aside>
   );
 }
