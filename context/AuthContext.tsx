@@ -92,12 +92,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateAvatar = (newAvatarUrl: string) => {
+  const updateAvatar = async (newAvatarUrl: string) => {
     if (user) {
       const updatedUser = { ...user, avatarUrl: newAvatarUrl };
       setUser(updatedUser);
       if (typeof window !== 'undefined') {
         localStorage.setItem('todolist_auth_user_v1', JSON.stringify(updatedUser));
+      }
+      try {
+        await api.updateUserAvatar(newAvatarUrl);
+      } catch (err) {
+        console.error('Failed to sync avatar with API', err);
       }
       toast.success('Avatar updated! ✨');
     }

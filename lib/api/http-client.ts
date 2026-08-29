@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ApiClientInterface } from './client';
+import { User } from '@/types/auth';
 
 const API_BASE = '/api/v1';
 
@@ -49,10 +50,35 @@ export const httpClient: ApiClientInterface = {
     const res = await axios.post(`${API_BASE}/auth/login`, { isDemo: true });
     const { token, user } = res.data;
     if (typeof window !== 'undefined') {
+      // Preserve custom avatar if saved locally
+      const stored = localStorage.getItem('todolist_auth_user_v1');
+      let finalUser = user;
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.email === user.email && parsed.avatarUrl) {
+            finalUser = { ...user, avatarUrl: parsed.avatarUrl };
+          }
+        } catch {}
+      }
       localStorage.setItem('todolist_auth_token_v1', token);
-      localStorage.setItem('todolist_auth_user_v1', JSON.stringify(user));
+      localStorage.setItem('todolist_auth_user_v1', JSON.stringify(finalUser));
+      return { token, user: finalUser };
     }
     return { token, user };
+  },
+
+  async updateUserAvatar(avatarUrl: string): Promise<User> {
+    const res = await axios.patch(
+      `${API_BASE}/auth/me`,
+      { avatarUrl },
+      { headers: getHeaders() }
+    );
+    const updatedUser = res.data;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('todolist_auth_user_v1', JSON.stringify(updatedUser));
+    }
+    return updatedUser;
   },
 
   async logout() {

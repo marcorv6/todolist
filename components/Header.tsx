@@ -43,19 +43,12 @@ export function Header({
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card text-card-foreground px-4 py-3 sm:px-6 shadow-xs">
-        {/* Brand Title & Console Status Badge */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background font-semibold text-xs shadow-xs">
-              <Check className="h-4 w-4 stroke-[3]" />
-            </div>
-            <h1 className="text-sm font-bold tracking-tight text-foreground font-mono">TaskFlow</h1>
+        {/* Brand Title */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background font-semibold text-xs shadow-xs">
+            <Check className="h-4 w-4 stroke-[3]" />
           </div>
-
-          <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-500">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Neon DB Connected</span>
-          </div>
+          <h1 className="text-sm font-bold tracking-tight text-foreground font-mono">TaskFlow</h1>
         </div>
 
         {/* Search Bar with ⌘K Badge */}
@@ -109,7 +102,7 @@ export function Header({
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </button>
 
-              {/* Dropdown Menu - Opaque Solid Surface Background */}
+              {/* Dropdown Menu - Solid Surface Background */}
               {showUserDropdown && (
                 <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card text-card-foreground p-1.5 shadow-2xl text-xs z-[100]">
                   <div className="px-3 py-2 border-b border-border/40 font-mono">

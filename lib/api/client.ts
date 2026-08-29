@@ -20,6 +20,7 @@ export interface ApiClientInterface {
   register(credentials: RegisterCredentials): Promise<AuthResponse>;
   loginAsDemoGuest(): Promise<AuthResponse>;
   logout(): Promise<void>;
+  updateUserAvatar(avatarUrl: string): Promise<User>;
 
   getTodos(filters?: Partial<FilterOptions>): Promise<{ data: TodoItem[]; total: number }>;
   getTodoById(id: string): Promise<TodoItem>;

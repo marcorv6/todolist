@@ -173,11 +173,31 @@ class MockApiClient {
   async loginAsDemoGuest(): Promise<AuthResponse> {
     await this.delay(150);
     const token = 'jwt_mock_token_demo_123';
+    let userToUse = DEMO_USER;
     if (this.isBrowser()) {
-      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(DEMO_USER));
+      const stored = localStorage.getItem(STORAGE_KEY_USER);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.email === DEMO_USER.email && parsed.avatarUrl) {
+            userToUse = { ...DEMO_USER, avatarUrl: parsed.avatarUrl };
+          }
+        } catch {}
+      }
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(userToUse));
       localStorage.setItem(STORAGE_KEY_TOKEN, token);
     }
-    return { user: DEMO_USER, token };
+    return { user: userToUse, token };
+  }
+
+  async updateUserAvatar(avatarUrl: string): Promise<User> {
+    await this.delay(100);
+    const currentUser = this.getCurrentUser() || DEMO_USER;
+    const updatedUser = { ...currentUser, avatarUrl };
+    if (this.isBrowser()) {
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedUser));
+    }
+    return updatedUser;
   }
 
   async logout(): Promise<void> {
