@@ -13,10 +13,15 @@ if (!process.env.DATABASE_URL) {
   }
 }
 
-const connectionString = process.env.DATABASE_URL;
+let connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
   throw new Error('DATABASE_URL environment variable is missing. Set it in .env.local');
+}
+
+// Normalize legacy sslmode=require to sslmode=verify-full to satisfy pg driver security requirements
+if (connectionString.includes('sslmode=require')) {
+  connectionString = connectionString.replace('sslmode=require', 'sslmode=verify-full');
 }
 
 // Server-side PostgreSQL pool for Neon
