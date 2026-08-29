@@ -93,19 +93,39 @@ export function TaskModal({
     onClose();
   };
 
-  const priorityOptions: { value: Priority; label: string; activeClass: string }[] = [
-    { value: 'urgent', label: 'P1 - Urgent', activeClass: 'bg-rose-500 text-white' },
-    { value: 'high', label: 'P2 - High', activeClass: 'bg-amber-500 text-white' },
-    { value: 'medium', label: 'P3 - Medium', activeClass: 'bg-blue-500 text-white' },
-    { value: 'low', label: 'P4 - Low', activeClass: 'bg-zinc-600 text-white' },
+  const priorityOptions: { value: Priority; label: string; activeClass: string; inactiveClass: string }[] = [
+    {
+      value: 'urgent',
+      label: 'P1 - Urgent',
+      activeClass: 'bg-rose-500 text-white font-bold border-rose-500 shadow-xs',
+      inactiveClass: 'bg-secondary/60 text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary',
+    },
+    {
+      value: 'high',
+      label: 'P2 - High',
+      activeClass: 'bg-amber-500 text-white font-bold border-amber-500 shadow-xs',
+      inactiveClass: 'bg-secondary/60 text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary',
+    },
+    {
+      value: 'medium',
+      label: 'P3 - Medium',
+      activeClass: 'bg-blue-600 text-white font-bold border-blue-600 shadow-xs',
+      inactiveClass: 'bg-secondary/60 text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary',
+    },
+    {
+      value: 'low',
+      label: 'P4 - Low',
+      activeClass: 'bg-zinc-600 text-white font-bold border-zinc-600 shadow-xs',
+      inactiveClass: 'bg-secondary/60 text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary',
+    },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs">
       <div className="w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
-          <h2 className="text-sm font-bold tracking-tight text-foreground">
+          <h2 className="text-sm font-bold tracking-tight text-foreground font-mono">
             {editingTodo ? 'Edit Task' : 'New Task'}
           </h2>
           <button
@@ -120,7 +140,7 @@ export function TaskModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+            <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
               Title *
             </label>
             <input
@@ -128,7 +148,7 @@ export function TaskModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="What needs to be done?"
-              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-foreground/30 focus:outline-none"
+              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-foreground/40 focus:outline-none"
               required
               autoFocus
             />
@@ -136,7 +156,7 @@ export function TaskModal({
 
           {/* Description */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+            <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
               Notes / Description
             </label>
             <textarea
@@ -144,26 +164,24 @@ export function TaskModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add optional notes or breakdown..."
               rows={2}
-              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-foreground/30 focus:outline-none"
+              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:border-foreground/40 focus:outline-none"
             />
           </div>
 
           {/* Priority & Category Pickers */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+              <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
                 Priority
               </label>
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-2 gap-1.5">
                 {priorityOptions.map((opt) => (
                   <button
                     key={opt.value}
                     type="button"
                     onClick={() => setPriority(opt.value)}
-                    className={`rounded py-1 text-[10px] font-semibold transition-all ${
-                      priority === opt.value
-                        ? opt.activeClass
-                        : 'bg-secondary text-muted-foreground hover:text-foreground'
+                    className={`rounded-lg border py-1.5 px-2 text-[11px] font-mono transition-all ${
+                      priority === opt.value ? opt.activeClass : opt.inactiveClass
                     }`}
                   >
                     {opt.label}
@@ -173,13 +191,13 @@ export function TaskModal({
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+              <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
                 Category
               </label>
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground focus:outline-none cursor-pointer"
               >
                 <option value="">No Category</option>
                 {categories.map((cat) => (
@@ -193,20 +211,20 @@ export function TaskModal({
 
           {/* Due Date */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+            <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
               Due Date
             </label>
             <input
               type="datetime-local"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none"
+              className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none font-mono"
             />
           </div>
 
           {/* Subtasks */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+            <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
               Subtasks ({subtasks.length})
             </label>
             <div className="space-y-2">
@@ -227,7 +245,7 @@ export function TaskModal({
                 <button
                   type="button"
                   onClick={handleAddSubtask}
-                  className="rounded-md bg-secondary px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent"
+                  className="rounded-md bg-secondary px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-accent border border-border/40 font-mono"
                 >
                   Add
                 </button>
@@ -236,7 +254,7 @@ export function TaskModal({
               {subtasks.length > 0 && (
                 <div className="space-y-1 rounded-md border border-border/50 bg-secondary/30 p-2">
                   {subtasks.map((st, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs">
+                    <div key={i} className="flex items-center justify-between text-xs font-mono">
                       <span className="text-foreground">{st.title}</span>
                       <button
                         type="button"
@@ -254,7 +272,7 @@ export function TaskModal({
 
           {/* Tags */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase text-muted-foreground mb-1">
+            <label className="block text-[11px] font-mono font-semibold uppercase text-muted-foreground mb-1">
               Tags
             </label>
             <div className="flex gap-2">
@@ -269,12 +287,12 @@ export function TaskModal({
                   }
                 }}
                 placeholder="Add tag and press Enter..."
-                className="flex-1 rounded-md border border-input bg-background px-3 py-1 text-xs focus:outline-none"
+                className="flex-1 rounded-md border border-input bg-background px-3 py-1 text-xs focus:outline-none font-mono"
               />
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="rounded-md bg-secondary px-3 py-1 text-xs font-medium text-foreground hover:bg-accent"
+                className="rounded-md bg-secondary px-3 py-1 text-xs font-semibold text-foreground hover:bg-accent border border-border/40 font-mono"
               >
                 Add Tag
               </button>
@@ -284,7 +302,7 @@ export function TaskModal({
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="flex items-center gap-1 rounded bg-secondary px-2 py-0.5 text-xs font-mono text-secondary-foreground"
+                    className="flex items-center gap-1 rounded bg-secondary px-2 py-0.5 text-xs font-mono text-secondary-foreground border border-border/40"
                   >
                     #{tag}
                     <button
@@ -301,11 +319,11 @@ export function TaskModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex justify-end gap-2 border-t border-border/50 pt-4">
+          <div className="flex justify-end gap-2 border-t border-border/50 pt-4 font-mono">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-border px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary transition-colors"
+              className="rounded-md border border-border px-3.5 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
             >
               Cancel
             </button>

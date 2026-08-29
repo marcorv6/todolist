@@ -30,7 +30,6 @@ export function Header({
     setMounted(true);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ⌘K or Ctrl+K or / to focus search input
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         searchInputRef.current?.focus();
@@ -43,7 +42,7 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/95 px-4 py-3 backdrop-blur-md sm:px-6">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card px-4 py-3 sm:px-6 shadow-xs">
         {/* Brand Title & Console Status Badge */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
@@ -110,9 +109,9 @@ export function Header({
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown Menu - 100% Opaque Solid Card Background with high Z-Index */}
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-card p-1 shadow-xl text-xs z-50">
+                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-border bg-card p-1.5 shadow-2xl text-xs z-[100] opacity-100">
                   <div className="px-3 py-2 border-b border-border/40 font-mono">
                     <p className="font-semibold text-foreground truncate">{user.name}</p>
                     <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
@@ -123,7 +122,7 @@ export function Header({
                       setShowUserDropdown(false);
                       setIsAvatarModalOpen(true);
                     }}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
                   >
                     <Sparkles className="h-3.5 w-3.5 text-amber-500" />
                     <span>Change Avatar</span>
@@ -134,7 +133,7 @@ export function Header({
                       setShowUserDropdown(false);
                       onOpenAuthModal();
                     }}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
                   >
                     <UserIcon className="h-3.5 w-3.5" />
                     <span>Switch Account</span>
@@ -145,7 +144,7 @@ export function Header({
                       setShowUserDropdown(false);
                       logout();
                     }}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-rose-500 hover:bg-rose-500/10 transition-colors"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     <span>Log Out</span>

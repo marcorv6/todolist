@@ -22,13 +22,13 @@ export function AvatarModal({ isOpen, onClose }: AvatarModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl space-y-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs">
+      <div className="w-full max-w-sm rounded-xl border border-border bg-card text-card-foreground p-6 shadow-2xl space-y-5 opacity-100 font-sans">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-400" />
-            <h2 className="text-sm font-bold tracking-tight text-foreground">
+            <h2 className="text-sm font-bold tracking-tight text-foreground font-mono">
               Choose Avatar
             </h2>
           </div>
@@ -76,11 +76,11 @@ export function AvatarModal({ isOpen, onClose }: AvatarModalProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40">
+        <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40 font-mono">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            className="rounded-md border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
           >
             Cancel
           </button>
