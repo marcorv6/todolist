@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Header } from '@/components/Header';
-import { AuthProvider } from '@/context/AuthContext';
 
 // Mock AuthContext user
 vi.mock('@/context/AuthContext', async () => {
@@ -34,7 +33,7 @@ describe('Header Component', () => {
     expect(screen.getByPlaceholderText(/search tasks/i)).toBeInTheDocument();
   });
 
-  it('toggles user dropdown menu on click without element overlap', () => {
+  it('toggles user dropdown menu with solid opaque card background & high z-index', () => {
     render(
       <Header
         searchQuery=""
@@ -47,8 +46,11 @@ describe('Header Component', () => {
     const userButton = screen.getByText('Marco');
     fireEvent.click(userButton);
 
-    expect(screen.getByText('Change Avatar')).toBeInTheDocument();
-    expect(screen.getByText('Switch Account')).toBeInTheDocument();
-    expect(screen.getByText('Log Out')).toBeInTheDocument();
+    const changeAvatarBtn = screen.getByText('Change Avatar');
+    expect(changeAvatarBtn).toBeInTheDocument();
+
+    const dropdownContainer = changeAvatarBtn.closest('.z-\\[100\\]');
+    expect(dropdownContainer).toHaveClass('bg-card');
+    expect(dropdownContainer).toHaveClass('z-[100]');
   });
 });

@@ -42,7 +42,7 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card px-4 py-3 sm:px-6 shadow-xs">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card text-card-foreground px-4 py-3 sm:px-6 shadow-xs">
         {/* Brand Title & Console Status Badge */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
@@ -109,9 +109,9 @@ export function Header({
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </button>
 
-              {/* Dropdown Menu - 100% Opaque Solid Card Background with high Z-Index */}
+              {/* Dropdown Menu - Opaque Solid Surface Background */}
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-border bg-card p-1.5 shadow-2xl text-xs z-[100] opacity-100">
+                <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card text-card-foreground p-1.5 shadow-2xl text-xs z-[100]">
                   <div className="px-3 py-2 border-b border-border/40 font-mono">
                     <p className="font-semibold text-foreground truncate">{user.name}</p>
                     <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>

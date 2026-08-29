@@ -22,8 +22,8 @@ export function AvatarModal({ isOpen, onClose }: AvatarModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-sm rounded-xl border border-border bg-card text-card-foreground p-6 shadow-2xl space-y-5 opacity-100 font-sans">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-sm rounded-xl border border-border bg-card text-card-foreground p-6 shadow-2xl space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <div className="flex items-center gap-2">
@@ -60,8 +60,8 @@ export function AvatarModal({ isOpen, onClose }: AvatarModalProps) {
                 onClick={() => setSelectedUrl(avatar.url)}
                 className={`relative flex items-center justify-center rounded-xl border p-2.5 transition-all ${
                   isSelected
-                    ? 'border-foreground bg-secondary/80 ring-2 ring-foreground/40 scale-105'
-                    : 'border-border/60 bg-background hover:bg-secondary/50 hover:border-border'
+                    ? 'border-foreground bg-secondary ring-2 ring-foreground/40 scale-105'
+                    : 'border-border/60 bg-background hover:bg-secondary/70 hover:border-border'
                 }`}
               >
                 <img src={avatar.url} alt="Avatar option" className="h-12 w-12 rounded-full" />
