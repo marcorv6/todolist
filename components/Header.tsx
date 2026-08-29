@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/context/AuthContext';
-import { Search, Plus, Sun, Moon, Check, LogOut, User as UserIcon, Zap, ChevronDown, Sparkles } from 'lucide-react';
+import { Search, Plus, Sun, Moon, Check, LogOut, User as UserIcon, Zap, ChevronDown, Sparkles, Command } from 'lucide-react';
 import { AvatarModal } from '@/components/AvatarModal';
 
 interface HeaderProps {
@@ -24,36 +24,59 @@ export function Header({
   const [mounted, setMounted] = React.useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     setMounted(true);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // ⌘K or Ctrl+K or / to focus search input
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/50 bg-background/80 px-4 py-3.5 backdrop-blur-md sm:px-8">
-        {/* Brand Title */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background font-semibold text-xs shadow-xs">
-            <Check className="h-4 w-4 stroke-[3]" />
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/95 px-4 py-3 backdrop-blur-md sm:px-6">
+        {/* Brand Title & Console Status Badge */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background font-semibold text-xs shadow-xs">
+              <Check className="h-4 w-4 stroke-[3]" />
+            </div>
+            <h1 className="text-sm font-bold tracking-tight text-foreground font-mono">TaskFlow</h1>
           </div>
-          <div>
-            <h1 className="text-sm font-bold tracking-tight text-foreground">TaskFlow</h1>
+
+          <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Neon DB Connected</span>
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative mx-6 max-w-sm flex-1">
+        {/* Search Bar with ⌘K Badge */}
+        <div className="relative mx-4 max-w-md flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground/70">
             <Search className="h-3.5 w-3.5" />
           </div>
           <input
+            ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search tasks or tags..."
-            className="w-full rounded-full border border-border/60 bg-secondary/40 py-1.5 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 transition-all focus:border-foreground/30 focus:bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20"
+            placeholder="Search tasks, categories or tags..."
+            className="w-full rounded-lg border border-border/60 bg-secondary/50 py-1.5 pl-8 pr-12 text-xs text-foreground placeholder:text-muted-foreground/60 transition-all focus:border-foreground/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20 font-mono"
           />
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border bg-muted/60 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
+              <Command className="h-2.5 w-2.5" />K
+            </kbd>
+          </div>
         </div>
 
         {/* Right Actions */}
@@ -62,35 +85,35 @@ export function Header({
           {mounted && (
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors border border-transparent hover:border-border/40"
               title="Toggle Theme"
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
           )}
 
-          {/* User Account / Sign In */}
+          {/* User Account Dropdown */}
           {isAuthenticated && user ? (
             <div className="relative">
               <button
                 onClick={() => setShowUserDropdown(!showUserDropdown)}
-                className="flex items-center gap-2 rounded-full border border-border/60 bg-secondary/30 py-1 pl-1.5 pr-2.5 text-xs text-foreground hover:bg-secondary transition-colors"
+                className="flex items-center gap-2 rounded-lg border border-border/60 bg-secondary/40 py-1 pl-1.5 pr-2.5 text-xs text-foreground hover:bg-secondary transition-colors"
               >
                 {user.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.name} className="h-5 w-5 rounded-full" />
+                  <img src={user.avatarUrl} alt={user.name} className="h-5 w-5 rounded-full border border-border/60 bg-background" />
                 ) : (
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-background font-bold text-[10px]">
                     {user.name.charAt(0)}
                   </div>
                 )}
-                <span className="font-medium max-w-[100px] truncate hidden sm:inline">{user.name}</span>
+                <span className="font-medium font-mono text-xs max-w-[110px] truncate hidden sm:inline">{user.name}</span>
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </button>
 
               {/* Dropdown Menu */}
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-card p-1 shadow-lg text-xs z-50">
-                  <div className="px-3 py-2 border-b border-border/40">
+                <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-card p-1 shadow-xl text-xs z-50">
+                  <div className="px-3 py-2 border-b border-border/40 font-mono">
                     <p className="font-semibold text-foreground truncate">{user.name}</p>
                     <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
                   </div>
@@ -133,7 +156,7 @@ export function Header({
           ) : (
             <button
               onClick={onOpenAuthModal}
-              className="flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
+              className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors font-mono"
             >
               <Zap className="h-3.5 w-3.5 text-amber-500" />
               <span>Sign In</span>
@@ -143,7 +166,7 @@ export function Header({
           {/* Create Task Button */}
           <button
             onClick={onOpenCreateModal}
-            className="flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background transition-all hover:opacity-90 active:scale-[0.97]"
+            className="flex items-center gap-1.5 rounded-lg bg-foreground px-3.5 py-1.5 text-xs font-medium text-background transition-all hover:opacity-90 active:scale-[0.97] font-mono shadow-xs"
           >
             <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
             <span>New Task</span>

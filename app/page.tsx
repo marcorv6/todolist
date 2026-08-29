@@ -231,7 +231,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
       {/* App Header */}
       <Header
         searchQuery={searchQuery}
@@ -243,9 +243,9 @@ export default function Home() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Main Layout Body */}
-      <div className="flex flex-1 flex-col md:flex-row">
-        {/* Sidebar */}
+      {/* Main Layout Body - Full Viewport Height & Width */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar Console Panel */}
         <Sidebar
           activeStatus={activeStatus}
           onSelectStatus={setActiveStatus}
@@ -264,12 +264,12 @@ export default function Home() {
           }}
         />
 
-        {/* Content Area */}
-        <main className="flex-1 p-4 sm:p-8 max-w-4xl space-y-6">
-          {/* Summary Bar */}
+        {/* Console Workspace Main Data Section */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 bg-background">
+          {/* High-Contrast Stats Metric Bar */}
           <StatsWidget stats={stats} />
 
-          {/* Task List Section */}
+          {/* Task Data Table Section */}
           <TaskList
             todos={todos}
             categories={categories}
